@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import fetch from "node-fetch";
 
 dotenv.config();
 
@@ -53,16 +54,25 @@ app.post("/chat", async (req, res) => {
     const reply = data?.choices?.[0]?.message?.content;
 
     if (!reply) {
-      return res.json({ reply: "[ERROR] Brak treści z OpenAI" });
+      return res.status(500).json({
+        reply: "[ERROR] OpenAI nie zwróciło treści",
+      });
     }
 
     res.json({ reply });
   } catch (e) {
-    console.error(e);
-    res.json({ reply: "[ERROR] Backend Leo crash" });
+    console.error("CHAT ERROR:", e);
+    res.status(500).json({
+      reply: "[ERROR] Backend Leo crash",
+    });
   }
 });
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log("🟣 Leo backend działa");
+/**
+ * 🔴 KLUCZOWA LINIA DLA RAILWAY
+ */
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🟣 Leo backend działa na porcie ${PORT}`);
 });
