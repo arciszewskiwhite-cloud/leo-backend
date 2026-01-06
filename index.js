@@ -9,6 +9,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.status(200).send("Leo backend OK");
+});
+
 const LEO_SYSTEM_PROMPT = `
 You are Leo — a calm, human emotional companion.
 You must respond directly to the user's message.
